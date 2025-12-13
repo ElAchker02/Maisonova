@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+/** @mixin \App\Models\Product */
+class ProductResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'description' => $this->description,
+            'category' => $this->category,
+            'price' => (float) $this->price,
+            'promotion' => $this->promotion !== null ? (float) $this->promotion : null,
+            'final_price' => $this->final_price,
+            'images' => $this->images ?? [],
+            'sizes' => $this->sizes ?? [],
+            'sheet_measures' => $this->sheet_measures ?? [],
+            'colors' => $this->colors ?? [],
+            'grammage' => $this->grammage ?? [],
+            'stock' => $this->stock,
+            'status' => (bool) $this->status,
+            'sales_quantity' => $this->when(isset($this->sales_quantity), (int) $this->sales_quantity),
+            'packs' => $this->whenLoaded('packs', fn () => $this->packs->map(fn ($pack) => [
+                'id' => $pack->id,
+                'title' => $pack->title,
+                'slug' => $pack->slug,
+                'pivot' => $pack->pivot ? [
+                    'sizes' => $pack->pivot->sizes,
+                    'colors' => $pack->pivot->colors,
+                    'grammage' => $pack->pivot->grammage,
+                    'quantity' => $pack->pivot->quantity,
+                ] : null,
+            ])),
+            'created_at' => $this->created_at,
+        ];
+    }
+}
