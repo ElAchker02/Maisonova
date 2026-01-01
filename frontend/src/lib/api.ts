@@ -7,7 +7,16 @@ import type {
   PaginatedResponse,
 } from "@/types/ecommerce";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8003/api";
+const resolveApiBase = () => {
+  const envBase = import.meta.env.VITE_API_URL as string | undefined;
+  if (envBase && envBase.trim().length > 0) {
+    return envBase.replace(/\/$/, "");
+  }
+  const origin = `${window.location.protocol}//${window.location.host}`;
+  return `${origin}/api`;
+};
+
+const API_BASE_URL = resolveApiBase();
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -166,13 +175,11 @@ export const api = {
       size?: string;
       color?: string;
       sheet_measure?: string;
-      grammage?: string;
       pack_items?: Array<{
         product_id: number;
         quantity: number;
         color?: string;
         sheet_measure?: string;
-        grammage?: string;
       }>;
       is_pack?: boolean;
     }>;

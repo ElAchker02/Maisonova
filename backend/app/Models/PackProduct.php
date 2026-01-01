@@ -13,14 +13,12 @@ class PackProduct extends Pivot
         'product_id',
         'sizes',
         'colors',
-        'grammage',
         'quantity',
     ];
 
     protected $casts = [
         'sizes' => 'array',
         'colors' => 'array',
-        'grammage' => 'array',
         'quantity' => 'integer',
     ];
 }

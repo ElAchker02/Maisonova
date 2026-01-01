@@ -51,7 +51,6 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedMeasure, setSelectedMeasure] = useState("");
-  const [selectedGrammage, setSelectedGrammage] = useState("");
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -59,12 +58,12 @@ const ProductDetail = () => {
     setSelectedSize("");
     setSelectedColor("");
     setSelectedMeasure("");
-    setSelectedGrammage("");
     setQuantity(1);
     window.scrollTo(0, 0);
   }, [productId]);
 
   const discountedPrice = product?.final_price ?? product?.price ?? 0;
+  const hasPromotion = Boolean(product?.promotion && product.promotion > 0);
   const isInStock = product ? product.status === true : false;
   const whatsappNumber = "33123456789";
   const whatsappMessage = encodeURIComponent(`Bonjour, je suis intéressé par ${product?.title ?? "un produit"}.`);
@@ -72,24 +71,23 @@ const ProductDetail = () => {
 
   const availableColors = useMemo(() => product?.colors ?? [], [product]);
   const availableSizes = useMemo(() => product?.sizes ?? [], [product]);
+  const availableMeasures = useMemo(() => product?.sheet_measures ?? [], [product]);
 
   const handleAddToCart = () => {
     if (!product) return;
-    const needSize = (product?.sizes?.length ?? 0) > 0;
-    const needColor = (product?.colors?.length ?? 0) > 0;
-    const needMeasure = (product?.sheet_measures?.length ?? 0) > 0;
-    const needGrammage = (product?.grammage?.length ?? 0) > 0;
+    const needSize = (availableSizes.length ?? 0) > 0;
+    const needColor = (availableColors.length ?? 0) > 0;
+    const needMeasure = (availableMeasures.length ?? 0) > 0;
 
     const missing =
       (needSize && !selectedSize) ||
       (needColor && !selectedColor) ||
-      (needMeasure && !selectedMeasure) ||
-      (needGrammage && !selectedGrammage);
+      (needMeasure && !selectedMeasure);
 
     if (missing) {
       toast({
         title: "Sélection incomplète",
-        description: "Veuillez choisir une taille, une couleur, une mesure et un grammage si disponibles",
+        description: "Veuillez choisir une taille, une couleur et une mesure si disponibles",
         variant: "destructive",
       });
       return;
@@ -103,7 +101,6 @@ const ProductDetail = () => {
       size: selectedSize,
       color: selectedColor,
       measure: selectedMeasure,
-      grammage: selectedGrammage,
       quantity,
     });
 
@@ -194,7 +191,7 @@ const ProductDetail = () => {
 
           <div className="space-y-6">
             <div>
-              {product.promotion && (
+              {hasPromotion && (
                 <Badge className="mb-3 bg-primary text-primary-foreground">
                   -{product.promotion}% de réduction
                 </Badge>
@@ -204,7 +201,7 @@ const ProductDetail = () => {
               </h1>
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl font-bold text-primary">{discountedPrice.toFixed(2)} DH</span>
-                {product.promotion && (
+                {hasPromotion && (
                   <span className="text-xl text-muted-foreground line-through">
                     {product.price.toFixed(2)} DH
                   </span>
@@ -219,33 +216,12 @@ const ProductDetail = () => {
             </div>
 
 
-            {availableSizes.length > 0 && (
-              <div>
-                <h3 className="font-medium mb-3">Taille</h3>
-                <div className="flex flex-wrap gap-2">
-                  {availableSizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={cn(
-                        "px-4 py-2 rounded-lg border text-sm transition-all",
-                        selectedSize === size
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border hover:border-primary"
-                      )}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
-            {(product.sheet_measures?.length ?? 0) > 0 && (
+            {availableMeasures.length > 0 && (
               <div>
                 <h3 className="font-medium mb-3">Mesure de drap</h3>
                 <div className="flex flex-wrap gap-2">
-                  {product.sheet_measures?.map((measure) => (
+                  {availableMeasures.map((measure) => (
                     <button
                       key={measure}
                       onClick={() => setSelectedMeasure(measure)}
@@ -259,31 +235,6 @@ const ProductDetail = () => {
                       {measure}
                     </button>
                   ))}
-                </div>
-              </div>
-            )}
-
-            {(product.grammage?.length ?? 0) > 0 && (
-              <div>
-                <h3 className="font-medium mb-3">Grammage</h3>
-                <div className="flex flex-wrap gap-2">
-                  {(product.grammage as (string | number)[]).map((g) => {
-                    const label = typeof g === "number" ? `${g}` : g;
-                    return (
-                      <button
-                        key={label}
-                        onClick={() => setSelectedGrammage(label)}
-                        className={cn(
-                          "px-4 py-2 rounded-lg border text-sm transition-all",
-                          selectedGrammage === label
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-border hover:border-primary"
-                        )}
-                      >
-                        {label}
-                      </button>
-                    );
-                  })}
                 </div>
               </div>
             )}

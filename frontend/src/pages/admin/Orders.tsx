@@ -261,9 +261,6 @@ const AdminOrders = () => {
                             {(item as any).sheet_measure && (
                               <span className="text-muted-foreground">Mesure : {(item as any).sheet_measure}</span>
                             )}
-                            {(item as any).grammage && (
-                              <span className="text-muted-foreground">Grammage : {(item as any).grammage}</span>
-                            )}
                             {item.color && <span className="text-muted-foreground">Couleur : {item.color}</span>}
                             {isPack && Array.isArray((item as any).pack_items) && (
                               <div className="mt-2 border-t border-border pt-2 space-y-1">
@@ -273,7 +270,6 @@ const AdminOrders = () => {
                                     <span className="font-medium">ID #{p.product_id}</span>
                                     <span>x{p.quantity ?? 1}</span>
                                     {p.sheet_measure && <span>· {p.sheet_measure}</span>}
-                                    {p.grammage && <span>· {p.grammage}</span>}
                                     {p.color && <span>· {p.color}</span>}
                                   </div>
                                 ))}

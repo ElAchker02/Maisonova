@@ -39,13 +39,11 @@ const Checkout = () => {
             size: item.size,
             color: item.color,
             sheet_measure: item.measure,
-            grammage: item.grammage,
             pack_items: item.packItems?.map((p) => ({
               product_id: p.productId,
               quantity: p.quantity ?? 1,
               color: p.color,
               sheet_measure: p.sheet_measure,
-              grammage: p.grammage,
             })),
             is_pack: item.isPack ?? false,
           }))
@@ -132,7 +130,6 @@ const Checkout = () => {
                       <p className="text-xs text-muted-foreground">
                         {item.size}
                         {item.measure ? ` · ${item.measure}` : ""}
-                        {item.grammage ? ` · ${item.grammage}` : ""}
                         {item.color ? ` · ${item.color}` : ""} · x{item.quantity}
                       </p>
                       {item.packItems && item.packItems.length > 0 && (
@@ -141,7 +138,6 @@ const Checkout = () => {
                             <div key={`${p.productId}-${idx}`} className="flex items-center gap-1">
                               <span className="font-medium">{p.title}</span>
                               <span>· {p.sheet_measure ?? "mesure ?"}</span>
-                              {p.grammage && <span>· {p.grammage}</span>}
                               {p.color && <span>· {p.color}</span>}
                             </div>
                           ))}

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const apiBase = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/api\/?$/, "") ?? "";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 interface ProductCardProps {
   product: ApiProduct;
@@ -15,12 +15,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const discountedPrice = product.final_price ?? product.price;
   const isInStock = !!product.status;
-  const rawImage = product.images?.[0];
-  const image = rawImage
-    ? rawImage.startsWith("http")
-      ? rawImage
-      : `${apiBase}${rawImage}`
-    : "https://via.placeholder.com/600x600?text=Produit";
+  const image = normalizeImage(product.images?.[0], "product");
+  const hasPromotion = Boolean(product.promotion && product.promotion > 0);
 
   return (
     <div
@@ -55,7 +51,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </Badge>
         </div>
 
-        {product.promotion && (
+        {hasPromotion && (
           <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
             -{product.promotion}%
           </Badge>
@@ -69,7 +65,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
         <div className="flex items-center gap-2 mb-4">
           <span className="text-lg font-bold text-primary">{discountedPrice.toFixed(2)} DH</span>
-          {product.promotion && (
+          {hasPromotion && (
             <span className="text-sm text-muted-foreground line-through">
               {product.price.toFixed(2)} DH
             </span>

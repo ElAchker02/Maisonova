@@ -28,8 +28,6 @@ class StorePackRequest extends FormRequest
             'products.*.sheet_measures.*' => ['string', 'max:100'],
             'products.*.colors' => ['nullable', 'array'],
             'products.*.colors.*' => ['string', 'max:100'],
-            'products.*.grammage' => ['nullable', 'array'],
-            'products.*.grammage.*' => ['string', 'max:100'],
             'products.*.quantity' => ['nullable', 'integer', 'min:1'],
         ];
     }

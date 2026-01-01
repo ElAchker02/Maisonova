@@ -24,13 +24,11 @@ class StoreOrderRequest extends FormRequest
             'products.*.size' => ['nullable', 'string', 'max:100'],
             'products.*.color' => ['nullable', 'string', 'max:100'],
             'products.*.sheet_measure' => ['nullable', 'string', 'max:100'],
-            'products.*.grammage' => ['nullable', 'string', 'max:100'],
             'products.*.pack_items' => ['nullable', 'array'],
             'products.*.pack_items.*.product_id' => ['required_with:products.*.pack_items', 'integer'],
             'products.*.pack_items.*.quantity' => ['nullable', 'integer', 'min:1'],
             'products.*.pack_items.*.color' => ['nullable', 'string', 'max:100'],
             'products.*.pack_items.*.sheet_measure' => ['nullable', 'string', 'max:100'],
-            'products.*.pack_items.*.grammage' => ['nullable', 'string', 'max:100'],
             'products.*.is_pack' => ['nullable', 'boolean'],
             'total' => ['required', 'numeric', 'min:0'],
         ];

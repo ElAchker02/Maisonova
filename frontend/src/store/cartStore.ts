@@ -10,7 +10,6 @@ export interface CartItem {
   size: string;
   color: string;
   measure?: string;
-  grammage?: string;
   quantity: number;
   isPack?: boolean;
   packItems?: Array<{
@@ -19,7 +18,6 @@ export interface CartItem {
     quantity: number;
     color?: string;
     sheet_measure?: string;
-    grammage?: string;
   }>;
 }
 
@@ -46,7 +44,6 @@ export const useCartStore = create<CartState>()(
       addItem: (item) => {
         const extras = [
           item.measure ?? "",
-          item.grammage ?? "",
           item.isPack ? "pack" : "single",
           item.packItems ? JSON.stringify(item.packItems) : "",
         ].join("-");

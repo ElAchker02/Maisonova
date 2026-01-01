@@ -36,7 +36,6 @@ export interface ApiProduct {
   sizes: string[];
   sheet_measures: string[];
   colors: Array<ApiProductColor | string>;
-  grammage?: (number | string)[] | null;
   stock?: number;
   status: boolean;
   packs?: Array<{
@@ -46,7 +45,6 @@ export interface ApiProduct {
     pivot?: {
       sizes?: string[];
       colors?: ApiProductColor[];
-      grammage?: number | null;
       quantity?: number;
     };
   }>;
@@ -58,7 +56,6 @@ export interface ApiPackProductPivot {
   sizes?: string[];
   sheet_measures?: string[];
   colors?: ApiProductColor[] | string[];
-  grammage?: (number | string)[] | null;
   quantity?: number;
 }
 
@@ -82,7 +79,6 @@ export interface ApiPack {
     sizes?: string[];
     sheet_measures?: string[];
     colors?: Array<ApiProductColor | string>;
-    grammage?: (number | string)[];
     pivot?: ApiPackProductPivot;
   }>;
   created_at: string;
@@ -94,14 +90,12 @@ export interface ApiOrderProduct {
   size?: string;
   color?: string;
   sheet_measure?: string;
-  grammage?: string;
   is_pack?: boolean;
   pack_items?: Array<{
     product_id: number;
     quantity: number;
     color?: string;
     sheet_measure?: string;
-    grammage?: string;
   }>;
 }
 

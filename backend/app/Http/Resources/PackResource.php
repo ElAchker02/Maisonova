@@ -35,12 +35,10 @@ class PackResource extends JsonResource
                 'sizes' => $product->sizes ?? [],
                 'sheet_measures' => $product->sheet_measures ?? [],
                 'colors' => $product->colors ?? [],
-                'grammage' => $product->grammage ?? [],
                 'pivot' => $product->pivot ? [
                     'sizes' => $product->pivot->sizes,
                     'sheet_measures' => $product->pivot->sizes,
                     'colors' => $product->pivot->colors,
-                    'grammage' => $product->pivot->grammage,
                     'quantity' => $product->pivot->quantity,
                 ] : null,
             ])),

@@ -25,7 +25,6 @@ class StoreProductRequest extends FormRequest
             'sizes' => ['nullable', 'array'],
             'sheet_measures' => ['nullable', 'array'],
             'colors' => ['nullable', 'array'],
-            'grammage' => ['nullable', 'array'],
             'stock' => ['nullable', 'integer', 'min:0'],
             'status' => ['required', 'boolean'],
         ];

@@ -31,7 +31,6 @@ class UpdateProductRequest extends FormRequest
             'sizes' => ['sometimes', 'nullable', 'array'],
             'sheet_measures' => ['sometimes', 'nullable', 'array'],
             'colors' => ['sometimes', 'nullable', 'array'],
-            'grammage' => ['sometimes', 'nullable', 'array'],
             'stock' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'status' => ['sometimes', 'boolean'],
         ];

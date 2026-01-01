@@ -28,7 +28,6 @@ class ProductResource extends JsonResource
             'sizes' => $this->sizes ?? [],
             'sheet_measures' => $this->sheet_measures ?? [],
             'colors' => $this->colors ?? [],
-            'grammage' => $this->grammage ?? [],
             'stock' => $this->stock,
             'status' => (bool) $this->status,
             'sales_quantity' => $this->when(isset($this->sales_quantity), (int) $this->sales_quantity),
@@ -39,7 +38,6 @@ class ProductResource extends JsonResource
                 'pivot' => $pack->pivot ? [
                     'sizes' => $pack->pivot->sizes,
                     'colors' => $pack->pivot->colors,
-                    'grammage' => $pack->pivot->grammage,
                     'quantity' => $pack->pivot->quantity,
                 ] : null,
             ])),

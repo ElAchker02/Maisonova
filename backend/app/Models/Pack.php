@@ -44,7 +44,7 @@ class Pack extends Model
     {
         return $this->belongsToMany(Product::class)
             ->using(PackProduct::class)
-            ->withPivot(['sizes', 'colors', 'grammage', 'quantity'])
+            ->withPivot(['sizes', 'colors', 'quantity'])
             ->withTimestamps();
     }
 

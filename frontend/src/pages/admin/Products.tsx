@@ -57,7 +57,6 @@ const AdminProducts = () => {
     promotion: "",
     description: "",
     sheetMeasures: "",
-    grammage: "",
     colors: [] as string[],
     images: null as FileList | null,
     status: true,
@@ -94,13 +93,6 @@ const AdminProducts = () => {
           .map((m) => m.trim())
           .filter(Boolean)
           .forEach((m) => fd.append("sheet_measures[]", m));
-      }
-      if (form.grammage) {
-        form.grammage
-          .split(",")
-          .map((g) => g.trim())
-          .filter(Boolean)
-          .forEach((g) => fd.append("grammage[]", g));
       }
       if (form.colors.length > 0) {
         form.colors.forEach((c) => fd.append("colors[]", c));
@@ -150,7 +142,6 @@ const AdminProducts = () => {
       promotion: product.promotion ? String(product.promotion) : "",
       description: product.description ?? "",
       sheetMeasures: (product.sheet_measures ?? []).join(", "),
-      grammage: (product.grammage ?? []).join(", "),
       colors: colorStrings.filter(Boolean),
       images: null,
       status: product.status,
@@ -245,15 +236,6 @@ const AdminProducts = () => {
                         type="number"
                         value={form.promotion}
                         onChange={(e) => setForm((f) => ({ ...f, promotion: e.target.value }))}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="grammage">Grammage (séparé par virgule)</Label>
-                      <Input
-                        id="grammage"
-                        value={form.grammage}
-                        onChange={(e) => setForm((f) => ({ ...f, grammage: e.target.value }))}
-                        placeholder="600, 500"
                       />
                     </div>
                     <div className="space-y-2">

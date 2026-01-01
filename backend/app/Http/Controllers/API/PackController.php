@@ -130,7 +130,6 @@ class PackController extends Controller
                 'product_id' => ['required', 'exists:products,id'],
                 'sizes' => ['nullable', 'array'],
                 'colors' => ['nullable', 'array'],
-                'grammage' => ['nullable', 'integer', 'min:0'],
                 'quantity' => ['required', 'integer', 'min:1'],
             ]);
 
@@ -138,7 +137,6 @@ class PackController extends Controller
                 $validated['product_id'] => [
                     'sizes' => $validated['sizes'] ?? null,
                     'colors' => $validated['colors'] ?? null,
-                    'grammage' => $validated['grammage'] ?? null,
                     'quantity' => $validated['quantity'],
                 ],
             ]);
@@ -188,7 +186,6 @@ class PackController extends Controller
             $syncData[$product['product_id']] = [
                 'sizes' => $product['sheet_measures'] ?? null,
                 'colors' => $product['colors'] ?? null,
-                'grammage' => $product['grammage'] ?? null,
                 'quantity' => $product['quantity'] ?? 1,
             ];
         }

@@ -3,8 +3,7 @@ import { Package } from "lucide-react";
 import type { ApiPack } from "@/types/ecommerce";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
-const apiBase = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/api\/?$/, "") ?? "";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 interface PackCardProps {
   pack: ApiPack;
@@ -12,12 +11,8 @@ interface PackCardProps {
 
 export const PackCard = ({ pack }: PackCardProps) => {
   const discountedPrice = pack.final_price ?? pack.price;
-  const rawImage = pack.images?.[0];
-  const image = rawImage
-    ? rawImage.startsWith("http")
-      ? rawImage
-      : `${apiBase}${rawImage}`
-    : "https://via.placeholder.com/800x500?text=Pack";
+  const image = normalizeImage(pack.images?.[0], "pack");
+  const hasPromotion = Boolean(pack.promotion && pack.promotion > 0);
 
   return (
     <div className="group relative bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary/20">
@@ -34,7 +29,7 @@ export const PackCard = ({ pack }: PackCardProps) => {
           <Package className="h-5 w-5 text-primary" />
         </div>
 
-        {pack.promotion && (
+        {hasPromotion && (
           <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground text-sm px-3 py-1">
             -{pack.promotion}% sur le pack
           </Badge>
@@ -53,7 +48,7 @@ export const PackCard = ({ pack }: PackCardProps) => {
 
         <div className="flex items-center gap-3 mb-4">
           <span className="text-2xl font-bold text-primary">{discountedPrice.toFixed(2)} DH</span>
-          {pack.promotion && (
+          {hasPromotion && (
             <span className="text-sm text-muted-foreground line-through">
               {pack.price.toFixed(2)} DH
             </span>

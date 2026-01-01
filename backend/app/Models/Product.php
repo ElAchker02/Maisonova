@@ -21,7 +21,6 @@ class Product extends Model
         'sizes',
         'sheet_measures',
         'colors',
-        'grammage',
         'stock',
         'status',
     ];
@@ -33,7 +32,6 @@ class Product extends Model
         'sizes' => 'array',
         'sheet_measures' => 'array',
         'colors' => 'array',
-        'grammage' => 'array',
         'stock' => 'integer',
         'status' => 'boolean',
     ];
@@ -55,7 +53,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Pack::class)
             ->using(PackProduct::class)
-            ->withPivot(['sizes', 'colors', 'grammage', 'quantity'])
+            ->withPivot(['sizes', 'colors', 'quantity'])
             ->withTimestamps();
     }
 

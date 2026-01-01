@@ -28,7 +28,6 @@ type PackProductForm = {
   quantity: number;
   sheet_measures: string[];
   colors: string[];
-  grammage: (number | string)[];
 };
 
 const colorValue = (color: any) => {
@@ -96,7 +95,6 @@ const AdminPacks = () => {
       fd.append(`products[${index}][quantity]`, String(p.quantity));
       p.sheet_measures.forEach((m) => fd.append(`products[${index}][sheet_measures][]`, m));
       p.colors.forEach((c) => fd.append(`products[${index}][colors][]`, c));
-      p.grammage.forEach((g) => fd.append(`products[${index}][grammage][]`, String(g)));
     });
     return fd;
   };
@@ -150,10 +148,6 @@ const AdminPacks = () => {
         [],
       colors: (product.pivot?.colors as string[] | undefined)?.map((c) => colorValue(c)) ??
         (product.colors ?? []).map((c) => colorValue(c)),
-      grammage:
-        (product.pivot?.grammage as (number | string)[] | undefined) ||
-        product.grammage ||
-        [],
     }));
     setPackProducts(mappedProducts);
     setEditingId(pack.id);
@@ -172,7 +166,7 @@ const AdminPacks = () => {
   const addPackProduct = () => {
     setPackProducts((prev) => [
       ...prev,
-      { product_id: null, quantity: 1, sheet_measures: [], colors: [], grammage: [] },
+      { product_id: null, quantity: 1, sheet_measures: [], colors: [] },
     ]);
   };
 
@@ -317,7 +311,6 @@ const AdminPacks = () => {
                         const measures = (selectedProduct?.sheet_measures ?? selectedProduct?.sizes ?? []) as string[];
                         const colors =
                           (selectedProduct?.colors ?? []).map((c: any) => colorValue(c)).filter(Boolean);
-                        const grammages = (selectedProduct?.grammage ?? []) as (number | string)[];
 
                         return (
                           <div key={index} className="border border-dashed border-border rounded-lg p-3 space-y-3">
@@ -334,13 +327,11 @@ const AdminPacks = () => {
                                       (nextProduct?.sheet_measures ?? nextProduct?.sizes ?? []) as string[];
                                     const nextColors =
                                       (nextProduct?.colors ?? []).map((c: any) => colorValue(c)).filter(Boolean);
-                                    const nextGrammages = (nextProduct?.grammage ?? []) as (number | string)[];
                                     updatePackProduct(index, (current) => ({
                                       ...current,
                                       product_id: productId,
                                       sheet_measures: productId ? nextMeasures : [],
                                       colors: productId ? nextColors : [],
-                                      grammage: productId ? nextGrammages : [],
                                     }));
                                   }}
                                   required
@@ -404,38 +395,6 @@ const AdminPacks = () => {
                                             )}
                                           >
                                             {m}
-                                          </button>
-                                        );
-                                      })}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {grammages.length > 0 && (
-                                  <div>
-                                    <p className="text-sm font-medium mb-1">Grammage</p>
-                                    <div className="flex flex-wrap gap-2">
-                                      {grammages.map((g) => {
-                                        const key = String(g);
-                                        const active = packProd.grammage.includes(g);
-                                        return (
-                                          <button
-                                            type="button"
-                                            key={key}
-                                            onClick={() =>
-                                              updatePackProduct(index, (current) => ({
-                                                ...current,
-                                                grammage: active
-                                                  ? current.grammage.filter((x) => String(x) !== key)
-                                                  : [...current.grammage, g],
-                                              }))
-                                            }
-                                            className={cn(
-                                              "px-2 py-1 rounded border text-xs",
-                                              active ? "border-primary bg-primary text-primary-foreground" : "border-border"
-                                            )}
-                                          >
-                                            {key}
                                           </button>
                                         );
                                       })}

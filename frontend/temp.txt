@@ -28,7 +28,7 @@ const PackDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [expandedProduct, setExpandedProduct] = useState<number | null>(null);
   const [productSelections, setProductSelections] = useState<
-    Record<number, { measure?: string; color?: string }>
+    Record<number, { measure?: string; color?: string; grammage?: string }>
   >({});
 
   useEffect(() => {
@@ -55,6 +55,9 @@ const PackDetail = () => {
   const getColors = (product: any): (ApiProductColor | string)[] =>
     product.pivot?.colors ?? product.colors ?? [];
 
+  const getGrammage = (product: any): (number | string)[] =>
+    product.pivot?.grammage ?? product.grammage ?? [];
+
   const colorValue = (color: ApiProductColor | string) => {
     if (!color) return "";
     if (typeof color === "string") return color;
@@ -63,7 +66,7 @@ const PackDetail = () => {
 
   const handleProductSelection = (
     productId: number,
-    field: "measure" | "color",
+    field: "measure" | "color" | "grammage",
     value: string
   ) => {
     setProductSelections((prev) => ({
@@ -82,12 +85,17 @@ const PackDetail = () => {
       const selection = productSelections[product.id];
       const measures = getMeasures(product);
       const colors = getColors(product);
+      const grammages = getGrammage(product);
 
-      if (measures.length === 0 && colors.length === 0) {
+      if (measures.length === 0 && colors.length === 0 && grammages.length === 0) {
         return true;
       }
 
       if (measures.length > 0 && !selection?.measure) {
+        return false;
+      }
+
+      if (grammages.length > 0 && !selection?.grammage) {
         return false;
       }
 
@@ -101,7 +109,7 @@ const PackDetail = () => {
     if (!allSelected) {
       toast({
         title: "Sélection incomplète",
-        description: "Veuillez choisir mesure/couleur pour chaque produit du pack",
+        description: "Veuillez choisir mesure/grammage/couleur pour chaque produit du pack",
         variant: "destructive",
       });
       return;
@@ -115,6 +123,7 @@ const PackDetail = () => {
         quantity: 1,
         color: selection.color,
         sheet_measure: selection.measure,
+        grammage: selection.grammage,
       };
     });
 
@@ -242,6 +251,7 @@ const PackDetail = () => {
               {(pack.products ?? []).map((product) => {
                 const measures = getMeasures(product);
                 const colors = getColors(product);
+                const grammages = getGrammage(product);
 
                 return (
                   <Collapsible
@@ -255,7 +265,11 @@ const PackDetail = () => {
                       <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
                         <div className="text-left">
                           <p className="font-medium">{product.title}</p>
-                          
+                          {(product.pivot?.grammage || product.grammage) && (
+                            <p className="text-sm text-muted-foreground">
+                              Grammage: {(product.pivot?.grammage ?? product.grammage)?.join?.(", ") ?? product.pivot?.grammage}
+                            </p>
+                          )}
                       </div>
                         {expandedProduct === product.id ? (
                           <ChevronUp className="h-5 w-5 text-muted-foreground" />
@@ -284,6 +298,31 @@ const PackDetail = () => {
                                   {measure}
                                 </button>
                               ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {grammages.length > 0 && (
+                          <div>
+                            <p className="text-sm font-medium mb-2">Grammage</p>
+                            <div className="flex flex-wrap gap-2">
+                              {grammages.map((g) => {
+                                const value = String(g);
+                                return (
+                                  <button
+                                    key={value}
+                                    onClick={() => handleProductSelection(product.id, "grammage", value)}
+                                    className={cn(
+                                      "px-3 py-1.5 rounded border text-sm transition-all",
+                                      productSelections[product.id]?.grammage === value
+                                        ? "border-primary bg-primary text-primary-foreground"
+                                        : "border-border hover:border-primary"
+                                    )}
+                                  >
+                                    {value}
+                                  </button>
+                                );
+                              })}
                             </div>
                           </div>
                         )}
