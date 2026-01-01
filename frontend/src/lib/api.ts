@@ -237,4 +237,14 @@ export const api = {
       method: "DELETE",
       token,
     }),
+
+  getSettings: (token?: string) =>
+    apiFetch<{ data: any }>("/settings", token ? { token } : undefined).then((res) => res.data),
+
+  updateSettings: (data: FormData, token: string) =>
+    apiFetch<{ message: string; data: any }>("/settings", {
+      method: "POST",
+      data,
+      token,
+    }),
 };

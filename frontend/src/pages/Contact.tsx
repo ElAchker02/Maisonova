@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
-import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin } from 'lucide-react';
+import { useSettings } from '@/hooks/useSettings';
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,6 +16,8 @@ const Contact = () => {
     subject: '',
     message: '',
   });
+  const { data: settings } = useSettings();
+  const contact = settings?.contact;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,12 +133,16 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="font-medium">Téléphone</p>
-                    <a
-                      href="tel:+33123456789"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      +33 1 23 45 67 89
-                    </a>
+                    {contact?.phone ? (
+                      <a
+                        href={`tel:${contact.phone}`}
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {contact.phone}
+                      </a>
+                    ) : (
+                      <p className="text-muted-foreground">Non renseigné</p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -144,12 +151,16 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="font-medium">Email</p>
-                    <a
-                      href="mailto:contact@maisonluxe.fr"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      contact@maisonluxe.fr
-                    </a>
+                    {contact?.email ? (
+                      <a
+                        href={`mailto:${contact.email}`}
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {contact.email}
+                      </a>
+                    ) : (
+                      <p className="text-muted-foreground">Non renseigné</p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -158,22 +169,13 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="font-medium">Adresse</p>
-                    <p className="text-muted-foreground">
-                      15 Rue du Commerce<br />
-                      75015 Paris, France
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Clock className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Horaires</p>
-                    <p className="text-muted-foreground">
-                      Lun - Ven: 9h00 - 18h00<br />
-                      Sam: 10h00 - 16h00
-                    </p>
+                    {contact?.address ? (
+                      <p className="text-muted-foreground whitespace-pre-line">
+                        {contact.address}
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground">Non renseignée</p>
+                    )}
                   </div>
                 </div>
               </div>

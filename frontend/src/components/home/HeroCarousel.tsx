@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
+import { useSettings } from "@/hooks/useSettings";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 export const HeroCarousel = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
@@ -17,8 +19,19 @@ export const HeroCarousel = () => {
     queryKey: ["hero-products"],
     queryFn: () => api.getTopSales(),
   });
+  const { data: settings } = useSettings();
 
   const slides = useMemo(() => {
+    const carousel = settings?.carousel ?? [];
+    if (carousel.length > 0) {
+      return carousel.map((src, idx) => ({
+        id: `carousel-${idx}`,
+        title: "Mainsonova",
+        subtitle: "Collection premium",
+        image: normalizeImage(src, "pack"),
+      }));
+    }
+
     const products = data?.data ?? [];
     if (products.length === 0) {
       return [
@@ -35,7 +48,7 @@ export const HeroCarousel = () => {
       id: product.id.toString(),
       title: product.title,
       subtitle: product.category ?? "Collection Mainsonova",
-      image: product.images?.[0] ?? "https://via.placeholder.com/1600x900?text=Produit",
+      image: normalizeImage(product.images?.[0], "pack"),
     }));
   }, [data]);
 

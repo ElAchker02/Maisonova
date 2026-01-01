@@ -5,9 +5,12 @@ use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\PackController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('auth/login', [AuthController::class, 'login']);
+
+Route::get('settings', [SettingsController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth/me', [AuthController::class, 'me']);
@@ -18,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('users', [UserController::class, 'store']);
         Route::put('users/{user}', [UserController::class, 'update']);
         Route::delete('users/{user}', [UserController::class, 'destroy']);
+        Route::post('settings', [SettingsController::class, 'update']);
     });
 });
 

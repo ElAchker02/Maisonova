@@ -16,6 +16,7 @@ import AdminProducts from "./pages/admin/Products";
 import AdminPacks from "./pages/admin/Packs";
 import AdminOrders from "./pages/admin/Orders";
 import AdminUsers from "./pages/admin/Users";
+import AdminSettings from "./pages/admin/Settings";
 import AdminLogin from "./pages/admin/Login";
 import { RequireAdmin } from "./components/admin/RequireAdmin";
 import { RequireSuperAdmin } from "./components/admin/RequireSuperAdmin";
@@ -71,6 +72,14 @@ const App = () => (
             element={
               <RequireAdmin>
                 <AdminOrders />
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="/admin/parametres"
+            element={
+              <RequireAdmin>
+                <AdminSettings />
               </RequireAdmin>
             }
           />

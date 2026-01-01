@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, Package2, ShoppingCart, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, Package, Package2, ShoppingCart, LogOut, Users, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
@@ -20,6 +20,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     { label: 'Produits', path: '/admin/produits', icon: Package },
     { label: 'Packs', path: '/admin/packs', icon: Package2 },
     { label: 'Commandes', path: '/admin/commandes', icon: ShoppingCart },
+    { label: 'Paramètres', path: '/admin/parametres', icon: Settings },
     ...(user?.role === 'superadmin'
       ? [{ label: 'Utilisateurs', path: '/admin/utilisateurs', icon: Users }]
       : []),
