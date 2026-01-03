@@ -23,6 +23,7 @@ class Product extends Model
         'colors',
         'stock',
         'status',
+        'masquer',
     ];
 
     protected $casts = [
@@ -34,6 +35,7 @@ class Product extends Model
         'colors' => 'array',
         'stock' => 'integer',
         'status' => 'boolean',
+        'masquer' => 'boolean',
     ];
 
     protected $appends = [

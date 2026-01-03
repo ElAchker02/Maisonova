@@ -38,6 +38,7 @@ export interface ApiProduct {
   colors: Array<ApiProductColor | string>;
   stock?: number;
   status: boolean;
+  masquer?: boolean;
   packs?: Array<{
     id: number;
     title: string;

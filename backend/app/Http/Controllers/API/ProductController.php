@@ -23,7 +23,12 @@ class ProductController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = min($request->integer('per_page', 20), 50);
-        $products = Product::with('packs')->latest()->paginate($perPage);
+        $includeHidden = $request->boolean('include_hidden', false);
+
+        $products = Product::with('packs')
+            ->when(!$includeHidden, fn ($q) => $q->where('masquer', false))
+            ->latest()
+            ->paginate($perPage);
 
         return ProductResource::collection($products)
             ->additional([
@@ -42,6 +47,7 @@ class ProductController extends Controller
             $data = $request->validated();
 
             $data['stock'] = $data['stock'] ?? 0;
+            $data['masquer'] = $data['masquer'] ?? false;
 
             if ($request->hasFile('images')) {
                 $data['images'] = $this->uploader->upload($request->file('images'));
@@ -79,6 +85,9 @@ class ProductController extends Controller
 
             if (!array_key_exists('stock', $data)) {
                 $data['stock'] = $product->stock;
+            }
+            if (!array_key_exists('masquer', $data)) {
+                $data['masquer'] = $product->masquer ?? false;
             }
 
             if ($request->hasFile('images')) {
@@ -124,7 +133,9 @@ class ProductController extends Controller
             ->sortByDesc('quantity')
             ->take(10);
 
-        $products = Product::whereIn('id', $sales->keys())->get()
+        $products = Product::whereIn('id', $sales->keys())
+            ->where('masquer', false)
+            ->get()
             ->map(function (Product $product) use ($sales) {
                 $product->sales_quantity = $sales[$product->id]['quantity'] ?? 0;
                 return $product;
@@ -148,6 +159,7 @@ class ProductController extends Controller
         $query = Product::query()
             ->whereKeyNot($product->id)
             ->where('status', true)
+            ->where('masquer', false)
             ->when($product->category, fn ($q) => $q->where('category', $product->category))
             ->when($product->colors, function ($q) use ($product) {
                 $firstColor = $product->colors[0] ?? null;
@@ -172,6 +184,7 @@ class ProductController extends Controller
     public function categories(): JsonResponse
     {
         $categories = Product::whereNotNull('category')
+            ->where('masquer', false)
             ->distinct()
             ->orderBy('category')
             ->pluck('category');

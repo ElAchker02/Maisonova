@@ -27,6 +27,7 @@ class StoreProductRequest extends FormRequest
             'colors' => ['nullable', 'array'],
             'stock' => ['nullable', 'integer', 'min:0'],
             'status' => ['required', 'boolean'],
+            'masquer' => ['sometimes', 'boolean'],
         ];
     }
 }

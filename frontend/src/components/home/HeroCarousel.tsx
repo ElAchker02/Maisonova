@@ -32,7 +32,7 @@ export const HeroCarousel = () => {
       }));
     }
 
-    const products = data?.data ?? [];
+    const products = (data?.data ?? []).filter((p) => !p.masquer);
     if (products.length === 0) {
       return [
         {

@@ -16,7 +16,7 @@ const Categories = () => {
     queryFn: () => api.getProducts({ per_page: 100 }),
   });
 
-  const products = data?.data ?? [];
+  const products = (data?.data ?? []).filter((p) => !p.masquer);
 
   const categories = useMemo(() => {
     const unique = Array.from(

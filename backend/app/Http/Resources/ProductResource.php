@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
             'colors' => $this->colors ?? [],
             'stock' => $this->stock,
             'status' => (bool) $this->status,
+            'masquer' => (bool) ($this->masquer ?? false),
             'sales_quantity' => $this->when(isset($this->sales_quantity), (int) $this->sales_quantity),
             'packs' => $this->whenLoaded('packs', fn () => $this->packs->map(fn ($pack) => [
                 'id' => $pack->id,

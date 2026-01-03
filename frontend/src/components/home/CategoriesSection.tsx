@@ -19,16 +19,18 @@ export const CategoriesSection = () => {
   const categories: DerivedCategory[] = [];
   const seen = new Set<string>();
 
-  data?.data.forEach((product) => {
-    const key = product.category ?? "Autres";
-    if (seen.has(key)) return;
-    seen.add(key);
-    categories.push({
-      name: key,
-      description: product.description ?? "Collection de linge de maison soigneusement sélectionnée.",
-      image: normalizeImage(product.images?.[0], "product"),
+  data?.data
+    ?.filter((p) => !p.masquer)
+    .forEach((product) => {
+      const key = product.category ?? "Autres";
+      if (seen.has(key)) return;
+      seen.add(key);
+      categories.push({
+        name: key,
+        description: product.description ?? "Collection de linge de maison soigneusement sélectionnée.",
+        image: normalizeImage(product.images?.[0], "product"),
+      });
     });
-  });
 
   return (
     <section className="py-16 md:py-24 bg-cream">

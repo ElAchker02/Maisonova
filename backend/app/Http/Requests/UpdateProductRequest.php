@@ -33,6 +33,7 @@ class UpdateProductRequest extends FormRequest
             'colors' => ['sometimes', 'nullable', 'array'],
             'stock' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'status' => ['sometimes', 'boolean'],
+            'masquer' => ['sometimes', 'boolean'],
         ];
     }
 }

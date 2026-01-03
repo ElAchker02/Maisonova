@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -63,12 +63,13 @@ const AdminProducts = () => {
     colors: [] as string[],
     images: null as FileList | null,
     status: true,
+    masquer: false,
   };
   const [form, setForm] = useState(emptyForm);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["admin-products"],
-    queryFn: () => api.getProducts({ per_page: 100 }),
+    queryFn: () => api.getProducts({ per_page: 100, include_hidden: 1 }),
   });
 
   const products = data?.data ?? [];
@@ -90,6 +91,7 @@ const AdminProducts = () => {
       if (form.promotion) fd.append("promotion", form.promotion);
       fd.append("description", form.description);
       fd.append("status", form.status ? "1" : "0");
+      fd.append("masquer", form.masquer ? "1" : "0");
       if (form.sheetMeasures) {
         form.sheetMeasures
           .split(",")
@@ -148,6 +150,7 @@ const AdminProducts = () => {
       colors: colorStrings.filter(Boolean),
       images: null,
       status: product.status,
+      masquer: product.masquer ?? false,
     });
     setEditingId(product.id);
     setIsDialogOpen(true);
@@ -168,7 +171,7 @@ const AdminProducts = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-serif font-bold text-foreground">Produits</h1>
-            <p className="text-muted-foreground">Gérez votre catalogue</p>
+            <p className="text-muted-foreground">Gerez votre catalogue</p>
           </div>
           <div className="flex gap-2">
             <Button
@@ -203,7 +206,7 @@ const AdminProducts = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="category">Catégorie</Label>
+                      <Label htmlFor="category">Categorie</Label>
                       <select
                         id="category"
                         value={form.category}
@@ -212,7 +215,7 @@ const AdminProducts = () => {
                         required
                       >
                         <option value="" disabled>
-                          Sélectionner une catégorie
+                          Selectionner une categorie
                         </option>
                         {((categoriesData?.data ?? []).length > 0
                           ? categoriesData?.data
@@ -255,7 +258,19 @@ const AdminProducts = () => {
                         <span className="text-sm text-muted-foreground">{form.status ? "Oui" : "Non"}</span>
                       </div>
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="masquer">Masquer sur le site</Label>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          id="masquer"
+                          checked={form.masquer}
+                          onCheckedChange={(checked) => setForm((f) => ({ ...f, masquer: checked }))}
+                        />
+                        <span className="text-sm text-muted-foreground">{form.masquer ? "Masque" : "Visible"}</span>
+                      </div>
+                    </div>
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
                     <Textarea
@@ -265,9 +280,10 @@ const AdminProducts = () => {
                       onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                     />
                   </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="sheet">Mesures de drap (séparées par virgule)</Label>
+                      <Label htmlFor="sheet">Mesures de drap (separees par virgule)</Label>
                       <Input
                         id="sheet"
                         value={form.sheetMeasures}
@@ -280,7 +296,7 @@ const AdminProducts = () => {
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button variant="outline" className="justify-start">
-                            {form.colors.length === 0 ? "Choisir des couleurs" : `${form.colors.length} sélectionnée(s)`}
+                            {form.colors.length === 0 ? "Choisir des couleurs" : `${form.colors.length} selectionnee(s)`}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-[260px]">
@@ -318,6 +334,7 @@ const AdminProducts = () => {
                       )}
                     </div>
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="images">Images (multiple)</Label>
                     <Input
@@ -328,6 +345,7 @@ const AdminProducts = () => {
                       onChange={(e) => setForm((f) => ({ ...f, images: e.target.files }))}
                     />
                   </div>
+
                   <div className="flex justify-end gap-2 pt-2">
                     <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                       Annuler
@@ -359,24 +377,25 @@ const AdminProducts = () => {
                 <TableRow>
                   <TableHead className="w-16">Image</TableHead>
                   <TableHead>Titre</TableHead>
-                  <TableHead>Catégorie</TableHead>
+                  <TableHead>Categorie</TableHead>
                   <TableHead>Prix</TableHead>
                   <TableHead>Promo</TableHead>
-                  <TableHead>Disponibilité</TableHead>
+                  <TableHead>Disponibilite</TableHead>
+                  <TableHead>Visibilite</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground">
                       Chargement des produits...
                     </TableCell>
                   </TableRow>
                 )}
                 {isError && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-destructive">
+                    <TableCell colSpan={8} className="text-center text-destructive">
                       Impossible de charger les produits.
                     </TableCell>
                   </TableRow>
@@ -395,7 +414,7 @@ const AdminProducts = () => {
                         </div>
                       </TableCell>
                       <TableCell className="font-medium max-w-52 truncate">{product.title}</TableCell>
-                      <TableCell>{product.category ?? "—"}</TableCell>
+                      <TableCell>{product.category ?? "-"}</TableCell>
                       <TableCell>{product.price.toFixed(2)} DH</TableCell>
                       <TableCell>
                         {product.promotion ? (
@@ -407,6 +426,11 @@ const AdminProducts = () => {
                       <TableCell>
                         <Badge className={product.status ? "bg-green-600" : "bg-destructive"}>
                           {product.status ? "Disponible" : "Indisponible"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={product.masquer ? "bg-destructive" : "bg-green-600"}>
+                          {product.masquer ? "Masque" : "Visible"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
@@ -428,8 +452,8 @@ const AdminProducts = () => {
                   ))}
                 {!isLoading && !isError && filteredProducts.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground">
-                      Aucun produit ne correspond à votre recherche.
+                    <TableCell colSpan={8} className="text-center text-muted-foreground">
+                      Aucun produit ne correspond a votre recherche.
                     </TableCell>
                   </TableRow>
                 )}
