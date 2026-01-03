@@ -11,6 +11,7 @@ import { useCartStore } from "@/store/cartStore";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -120,7 +121,7 @@ const Checkout = () => {
                   <div key={item.id} className="flex gap-4">
                     <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                       <img
-                        src={item.image}
+                        src={normalizeImage(item.image, "product")}
                         alt={item.productName}
                         className="h-full w-full object-cover"
                       />
