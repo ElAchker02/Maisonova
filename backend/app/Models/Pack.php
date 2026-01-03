@@ -17,6 +17,8 @@ class Pack extends Model
         'price',
         'promotion',
         'images',
+        'colors',
+        'measure_prices',
         'availability',
     ];
 
@@ -24,6 +26,8 @@ class Pack extends Model
         'price' => 'decimal:2',
         'promotion' => 'decimal:2',
         'images' => 'array',
+        'colors' => 'array',
+        'measure_prices' => 'array',
         'availability' => 'boolean',
     ];
 

@@ -21,13 +21,14 @@ class StorePackRequest extends FormRequest
             'promotion' => ['nullable', 'numeric', 'between:0,100'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'max:4096'],
+            'colors' => ['sometimes', 'array'],
+            'colors.*' => ['string', 'max:50'],
+            'measure_prices' => ['sometimes', 'array'],
+            'measure_prices.*.measure' => ['required_with:measure_prices', 'string', 'max:255'],
+            'measure_prices.*.price' => ['required_with:measure_prices', 'numeric', 'min:0'],
             'availability' => ['required', 'boolean'],
             'products' => ['nullable', 'array'],
             'products.*.product_id' => ['required_with:products', 'exists:products,id'],
-            'products.*.sheet_measures' => ['nullable', 'array'],
-            'products.*.sheet_measures.*' => ['string', 'max:100'],
-            'products.*.colors' => ['nullable', 'array'],
-            'products.*.colors.*' => ['string', 'max:100'],
             'products.*.quantity' => ['nullable', 'integer', 'min:1'],
         ];
     }

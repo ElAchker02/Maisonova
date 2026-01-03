@@ -184,8 +184,6 @@ class PackController extends Controller
 
         foreach ($products as $product) {
             $syncData[$product['product_id']] = [
-                'sizes' => $product['sheet_measures'] ?? null,
-                'colors' => $product['colors'] ?? null,
                 'quantity' => $product['quantity'] ?? 1,
             ];
         }

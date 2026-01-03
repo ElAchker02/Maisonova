@@ -70,6 +70,8 @@ export interface ApiPack {
   promotion?: number | null;
   final_price: number;
   images: string[];
+  colors?: Array<ApiProductColor | string>;
+  measure_prices?: Array<{ measure: string; price: number }>;
   availability: boolean;
   products?: Array<{
     id: number;

@@ -24,6 +24,8 @@ class PackResource extends JsonResource
             'promotion' => $this->promotion !== null ? (float) $this->promotion : null,
             'final_price' => $this->final_price,
             'images' => $this->normalizeImages($this->images ?? []),
+            'colors' => $this->colors ?? [],
+            'measure_prices' => $this->measure_prices ?? [],
             'availability' => (bool) $this->availability,
             'products' => $this->whenLoaded('products', fn () => $this->products->map(fn ($product) => [
                 'id' => $product->id,
@@ -32,13 +34,8 @@ class PackResource extends JsonResource
                 'price' => (float) $product->price,
                 'final_price' => $product->final_price,
                 'images' => $this->normalizeImages($product->images ?? []),
-                'sizes' => $product->sizes ?? [],
-                'sheet_measures' => $product->sheet_measures ?? [],
                 'colors' => $product->colors ?? [],
                 'pivot' => $product->pivot ? [
-                    'sizes' => $product->pivot->sizes,
-                    'sheet_measures' => $product->pivot->sizes,
-                    'colors' => $product->pivot->colors,
                     'quantity' => $product->pivot->quantity,
                 ] : null,
             ])),
