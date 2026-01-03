@@ -17,7 +17,7 @@ export const Footer = () => {
           <div className="space-y-4">
             {logo ? (
               <div className="h-12 w-auto">
-                <img src={logo} alt="Mainsonova" className="h-12 w-auto object-contain" />
+                <img src={logo} alt="Maisonova" className="h-12 w-auto object-contain" />
               </div>
             ) : (
               <h3 className="text-2xl font-serif font-bold">
@@ -125,7 +125,7 @@ export const Footer = () => {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-secondary-foreground/10 text-center">
           <p className="text-sm text-secondary-foreground/50">
-            © {new Date().getFullYear()} Mainsonova. Tous droits réservés.
+            © {new Date().getFullYear()} Maisonova. Tous droits réservés.
           </p>
         </div>
       </div>

@@ -31,10 +31,10 @@ const About = () => {
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">
-            À Propos de <span className="text-primary">Mainsonova</span>
+            À Propos de <span className="text-primary">Maisonova</span>
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Depuis 2010, Mainsonova s'engage à offrir le meilleur du linge de maison. 
+            Depuis 2010, Maisonova s'engage à offrir le meilleur du linge de maison. 
             Notre passion pour la qualité et le confort nous pousse à sélectionner 
             uniquement les matières les plus nobles pour créer des produits d'exception.
           </p>
@@ -47,7 +47,7 @@ const About = () => {
               Notre Histoire
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Fondée par une famille passionnée par l'art du textile, Mainsonova est née 
+              Fondée par une famille passionnée par l'art du textile, Maisonova est née 
               d'une vision simple : démocratiser l'accès au linge de maison haut de gamme. 
               Nous croyons que chacun mérite de dormir sur des draps soyeux et de s'envelopper 
               dans des serviettes moelleuses.

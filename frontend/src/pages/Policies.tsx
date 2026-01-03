@@ -32,14 +32,14 @@ const Policies = () => {
                 <h3 className="text-lg font-semibold mt-6 mb-3">1. Objet</h3>
                 <p className="text-muted-foreground mb-4">
                   Les présentes conditions générales de vente régissent les relations contractuelles 
-                  entre Mainsonova et ses clients dans le cadre de la vente de linge de maison 
+                  entre Maisonova et ses clients dans le cadre de la vente de linge de maison 
                   via le site internet.
                 </p>
 
                 <h3 className="text-lg font-semibold mt-6 mb-3">2. Prix</h3>
                 <p className="text-muted-foreground mb-4">
                   Les prix de nos produits sont indiqués en euros toutes taxes comprises (TTC). 
-                  Mainsonova se réserve le droit de modifier ses prix à tout moment, étant entendu 
+                  Maisonova se réserve le droit de modifier ses prix à tout moment, étant entendu 
                   que le prix figurant au catalogue le jour de la commande sera le seul applicable.
                 </p>
 

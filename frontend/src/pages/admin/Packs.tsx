@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { useAuthStore } from "@/store/authStore";
 import type { ApiProduct } from "@/types/ecommerce";
 import { cn } from "@/lib/utils";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 const slugify = (value: string) =>
   value
@@ -488,7 +489,7 @@ const AdminPacks = () => {
                       <TableCell>
                         <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted">
                           <img
-                            src={pack.images?.[0] ?? "https://via.placeholder.com/80"}
+                            src={normalizeImage(pack.images?.[0], "pack")}
                             alt={pack.title}
                             className="h-full w-full object-cover"
                           />

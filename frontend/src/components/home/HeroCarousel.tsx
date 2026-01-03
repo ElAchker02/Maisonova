@@ -26,7 +26,7 @@ export const HeroCarousel = () => {
     if (carousel.length > 0) {
       return carousel.map((src, idx) => ({
         id: `carousel-${idx}`,
-        title: "Mainsonova",
+        title: "Maisonova",
         subtitle: "Collection premium",
         image: normalizeImage(src, "pack"),
       }));
@@ -47,10 +47,10 @@ export const HeroCarousel = () => {
     return products.slice(0, 5).map((product) => ({
       id: product.id.toString(),
       title: product.title,
-      subtitle: product.category ?? "Collection Mainsonova",
+      subtitle: product.category ?? "Collection Maisonova",
       image: normalizeImage(product.images?.[0], "pack"),
     }));
-  }, [data]);
+  }, [data, settings]);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);

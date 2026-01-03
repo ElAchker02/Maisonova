@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+﻿import { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, Minus, Plus, Check } from "lucide-react";
@@ -11,6 +11,8 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import type { ApiProduct, ApiProductColor } from "@/types/ecommerce";
+import { useSettings } from "@/hooks/useSettings";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 const formatColorName = (color: ApiProductColor | string) => {
   if (typeof color === "string") return color;
@@ -26,8 +28,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const productId = id ? Number(id) : null;
   const { addItem, openCart } = useCartStore();
-
-  const apiBase = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/api\/?$/, "") ?? "";
+  const { data: settings } = useSettings();
 
   const {
     data: product,
@@ -65,7 +66,7 @@ const ProductDetail = () => {
   const discountedPrice = product?.final_price ?? product?.price ?? 0;
   const hasPromotion = Boolean(product?.promotion && product.promotion > 0);
   const isInStock = product ? product.status === true : false;
-  const whatsappNumber = "33123456789";
+  const whatsappNumber = settings?.contact?.whatsapp?.replace(/\D/g, "") || "212682639951";
   const whatsappMessage = encodeURIComponent(`Bonjour, je suis intéressé par ${product?.title ?? "un produit"}.`);
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
@@ -158,13 +159,7 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-square rounded-xl overflow-hidden bg-muted">
               <img
-                src={
-                  product.images?.[selectedImage]
-                    ? product.images[selectedImage].startsWith("http")
-                      ? product.images[selectedImage]
-                      : `${apiBase}${product.images[selectedImage]}`
-                    : "https://via.placeholder.com/800x800"
-                }
+                src={normalizeImage(product.images?.[selectedImage], "product")}
                 alt={product.title}
                 className="w-full h-full object-cover"
               />
@@ -182,7 +177,7 @@ const ProductDetail = () => {
                         : "border-transparent opacity-60 hover:opacity-100"
                     )}
                   >
-                    <img src={image} alt="" className="w-full h-full object-cover" />
+                    <img src={normalizeImage(image, "product")} alt="" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -214,8 +209,6 @@ const ProductDetail = () => {
                 {isInStock ? "En stock" : "Rupture de stock"}
               </Badge>
             </div>
-
-
 
             {availableMeasures.length > 0 && (
               <div>
@@ -277,8 +270,6 @@ const ProductDetail = () => {
                 )}
               </div>
             )}
-
-
 
             <div>
               <h3 className="font-medium mb-3">Quantité</h3>

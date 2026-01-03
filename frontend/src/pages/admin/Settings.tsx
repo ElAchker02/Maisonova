@@ -20,6 +20,7 @@ interface ContactSettings {
   phone: string;
   email: string;
   address: string;
+  whatsapp?: string;
 }
 
 interface SocialSettings {
@@ -41,6 +42,7 @@ const AdminSettings = () => {
     phone: "",
     email: "",
     address: "",
+    whatsapp: "",
   });
   const [social, setSocial] = useState<SocialSettings>({
     facebook: "",
@@ -104,6 +106,7 @@ const AdminSettings = () => {
       fd.append("contact[phone]", contact.phone);
       fd.append("contact[email]", contact.email);
       fd.append("contact[address]", contact.address);
+      fd.append("contact[whatsapp]", contact.whatsapp ?? "");
 
       fd.append("social[facebook]", social.facebook ?? "");
       fd.append("social[instagram]", social.instagram ?? "");
@@ -298,6 +301,14 @@ const AdminSettings = () => {
               <div className="space-y-2">
                 <Label>Adresse</Label>
                 <Input value={contact.address} onChange={(e) => setContact((c) => ({ ...c, address: e.target.value }))} />
+              </div>
+              <div className="space-y-2">
+                <Label>WhatsApp</Label>
+                <Input
+                  value={contact.whatsapp ?? ""}
+                  onChange={(e) => setContact((c) => ({ ...c, whatsapp: e.target.value }))}
+                  placeholder="+212 682-639951"
+                />
               </div>
               <div className="space-y-2">
                 <Label>Facebook</Label>

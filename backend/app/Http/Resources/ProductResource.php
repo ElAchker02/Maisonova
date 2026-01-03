@@ -24,7 +24,7 @@ class ProductResource extends JsonResource
             'price' => (float) $this->price,
             'promotion' => $this->promotion !== null ? (float) $this->promotion : null,
             'final_price' => $this->final_price,
-            'images' => $this->images ?? [],
+            'images' => $this->normalizeImages($this->images ?? []),
             'sizes' => $this->sizes ?? [],
             'sheet_measures' => $this->sheet_measures ?? [],
             'colors' => $this->colors ?? [],
@@ -43,5 +43,29 @@ class ProductResource extends JsonResource
             ])),
             'created_at' => $this->created_at,
         ];
+    }
+
+    /**
+     * @param array<int,string> $images
+     * @return array<int,string>
+     */
+    protected function normalizeImages(array $images): array
+    {
+        $host = parse_url(config('app.url') ?? '', PHP_URL_HOST);
+
+        return collect($images)->map(function ($img) use ($host) {
+            if (!is_string($img)) {
+                return $img;
+            }
+            if (filter_var($img, FILTER_VALIDATE_URL)) {
+                $parts = parse_url($img);
+                $path = ($parts['path'] ?? '') . (isset($parts['query']) ? '?' . $parts['query'] : '');
+                // Normalize /storage/public/... -> /storage/...
+                $path = str_replace('/storage/public/', '/storage/', $path);
+                return $path ?: $img;
+            }
+            $img = str_replace('/storage/public/', '/storage/', $img);
+            return $img;
+        })->values()->all();
     }
 }

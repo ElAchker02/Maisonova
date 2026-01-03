@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, Minus, Plus, Check, ChevronDown, ChevronUp } from "lucide-react";
@@ -11,12 +11,14 @@ import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { api } from "@/lib/api";
 import type { ApiProductColor } from "@/types/ecommerce";
+import { useSettings } from "@/hooks/useSettings";
 
 const PackDetail = () => {
   const apiBase = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/api\/?$/, "") ?? "";
   const { id } = useParams<{ id: string }>();
   const packId = id ? Number(id) : null;
   const { addItem, openCart } = useCartStore();
+  const { data: settings } = useSettings();
 
   const { data: pack, isLoading, isError } = useQuery({
     queryKey: ["pack", packId],
@@ -41,7 +43,7 @@ const PackDetail = () => {
 
   const discountedPrice = pack?.final_price ?? pack?.price ?? 0;
   const isInStock = pack?.availability ?? false;
-  const whatsappNumber = "33123456789";
+  const whatsappNumber = settings?.contact?.whatsapp?.replace(/\D/g, "") || "212682639951";
   const whatsappMessage = encodeURIComponent(`Bonjour, je suis intéressé par ${pack?.title ?? "un pack"}.`);
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
   const resolveImage = (image?: string) => {

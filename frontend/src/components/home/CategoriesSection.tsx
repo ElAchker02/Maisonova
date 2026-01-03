@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 interface DerivedCategory {
   name: string;
@@ -25,7 +26,7 @@ export const CategoriesSection = () => {
     categories.push({
       name: key,
       description: product.description ?? "Collection de linge de maison soigneusement sélectionnée.",
-      image: product.images?.[0] ?? "https://via.placeholder.com/1200x700?text=Catégorie",
+      image: normalizeImage(product.images?.[0], "product"),
     });
   });
 

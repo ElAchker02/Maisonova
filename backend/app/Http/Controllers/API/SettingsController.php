@@ -41,6 +41,7 @@ class SettingsController extends Controller
             'contact.phone' => ['required', 'string', 'max:100'],
             'contact.email' => ['required', 'email', 'max:150'],
             'contact.address' => ['required', 'string', 'max:255'],
+            'contact.whatsapp' => ['nullable', 'string', 'max:50'],
 
             'social.facebook' => ['nullable', 'url', 'max:255'],
             'social.instagram' => ['nullable', 'url', 'max:255'],

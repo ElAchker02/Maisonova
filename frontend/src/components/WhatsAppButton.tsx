@@ -1,7 +1,10 @@
+import { useSettings } from "@/hooks/useSettings";
+
 const whatsappSvg = <img src="/whatsapp.svg" alt="WhatsApp" className="h-7 w-7" />;
 
 export const WhatsAppButton = () => {
-  const phoneNumber = "33123456789";
+  const { data: settings } = useSettings();
+  const phoneNumber = settings?.contact?.whatsapp?.replace(/\D/g, "") || "212682639951";
   const message = encodeURIComponent("Bonjour, je souhaite avoir des informations sur vos produits.");
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 

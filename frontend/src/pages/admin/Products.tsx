@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useAuthStore } from "@/store/authStore";
+import { normalizeImage } from "@/lib/normalizeImage";
 
 const slugify = (value: string) =>
   value
@@ -44,6 +45,8 @@ const AdminProducts = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const token = useAuthStore((state) => state.token);
   const queryClient = useQueryClient();
+
+  const fallbackCategories = ["Linge de bain", "Linge de lit"];
 
   const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
@@ -211,7 +214,10 @@ const AdminProducts = () => {
                         <option value="" disabled>
                           Sélectionner une catégorie
                         </option>
-                        {(categoriesData?.data ?? []).map((cat) => (
+                        {((categoriesData?.data ?? []).length > 0
+                          ? categoriesData?.data
+                          : fallbackCategories
+                        )?.map((cat) => (
                           <option key={cat} value={cat}>
                             {cat}
                           </option>
@@ -382,7 +388,7 @@ const AdminProducts = () => {
                       <TableCell>
                         <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted">
                           <img
-                            src={product.images?.[0] ?? "https://via.placeholder.com/80"}
+                            src={normalizeImage(product.images?.[0], "product")}
                             alt={product.title}
                             className="h-full w-full object-cover"
                           />
