@@ -63,7 +63,37 @@ const ProductDetail = () => {
     window.scrollTo(0, 0);
   }, [productId]);
 
-  const discountedPrice = product?.final_price ?? product?.price ?? 0;
+  const basePrice = product?.final_price ?? product?.price ?? 0;
+
+  const measureOptions = useMemo(() => {
+    const raw = product?.measure_prices;
+    if (!raw) return [];
+    if (Array.isArray(raw)) {
+      return raw
+        .map((mp: any) => ({
+          measure: mp?.measure ?? "",
+          price: typeof mp?.price === "number" ? mp.price : Number(mp?.price ?? 0),
+        }))
+        .filter((mp) => mp.measure);
+    }
+    // handle potential object map { "90x190": 300 }
+    return Object.entries(raw as Record<string, number | string>).map(([measure, price]) => ({
+      measure,
+      price: typeof price === "number" ? price : Number(price ?? 0),
+    }));
+  }, [product]);
+
+  const measurePrice = useMemo(() => {
+    const mp = measureOptions.find((m) => m.measure === selectedMeasure);
+    return mp ? mp.price : undefined;
+  }, [measureOptions, selectedMeasure]);
+
+  const computeDiscount = (price: number) => {
+    const promo = product?.promotion ?? 0;
+    return promo > 0 ? price - price * (promo / 100) : price;
+  };
+
+  const discountedPrice = measurePrice !== undefined ? computeDiscount(measurePrice) : computeDiscount(basePrice);
   const hasPromotion = Boolean(product?.promotion && product.promotion > 0);
   const isInStock = product ? product.status === true : false;
   const whatsappNumber = settings?.contact?.whatsapp?.replace(/\D/g, "") || "212682639951";
@@ -72,7 +102,13 @@ const ProductDetail = () => {
 
   const availableColors = useMemo(() => product?.colors ?? [], [product]);
   const availableSizes = useMemo(() => product?.sizes ?? [], [product]);
-  const availableMeasures = useMemo(() => product?.sheet_measures ?? [], [product]);
+  const availableMeasures = useMemo(() => measureOptions.map((mp) => mp.measure), [measureOptions]);
+
+  useEffect(() => {
+    if (availableMeasures.length > 0) {
+      setSelectedMeasure(availableMeasures[0]);
+    }
+  }, [productId, availableMeasures.length]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -198,7 +234,7 @@ const ProductDetail = () => {
                 <span className="text-3xl font-bold text-primary">{discountedPrice.toFixed(2)} DH</span>
                 {hasPromotion && (
                   <span className="text-xl text-muted-foreground line-through">
-                    {product.price.toFixed(2)} DH
+                    {(measurePrice ?? basePrice).toFixed(2)} DH
                   </span>
                 )}
               </div>

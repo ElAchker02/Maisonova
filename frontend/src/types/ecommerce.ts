@@ -34,7 +34,8 @@ export interface ApiProduct {
   final_price: number;
   images: string[];
   sizes: string[];
-  sheet_measures: string[];
+  sheet_measures?: string[];
+  measure_prices?: Array<{ measure: string; price: number }>;
   colors: Array<ApiProductColor | string>;
   stock?: number;
   status: boolean;

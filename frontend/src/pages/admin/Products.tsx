@@ -18,11 +18,7 @@ import { useAuthStore } from "@/store/authStore";
 import { normalizeImage } from "@/lib/normalizeImage";
 
 const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "");
+  value.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
 
 const colorPalette = [
   "#FFFFFF", "#000000", "#808080", "#C0C0C0", "#A9A9A9",
@@ -60,6 +56,7 @@ const AdminProducts = () => {
     promotion: "",
     description: "",
     sheetMeasures: "",
+    measurePrices: [] as { measure: string; price: string }[],
     colors: [] as string[],
     images: null as FileList | null,
     status: true,
@@ -99,6 +96,14 @@ const AdminProducts = () => {
           .filter(Boolean)
           .forEach((m) => fd.append("sheet_measures[]", m));
       }
+      form.measurePrices.forEach((entry, idx) => {
+        if (entry.measure) {
+          fd.append(`measure_prices[${idx}][measure]`, entry.measure);
+          if (entry.price) {
+            fd.append(`measure_prices[${idx}][price]`, entry.price);
+          }
+        }
+      });
       if (form.colors.length > 0) {
         form.colors.forEach((c) => fd.append("colors[]", c));
       }
@@ -147,6 +152,10 @@ const AdminProducts = () => {
       promotion: product.promotion ? String(product.promotion) : "",
       description: product.description ?? "",
       sheetMeasures: (product.sheet_measures ?? []).join(", "),
+      measurePrices: (product.measure_prices ?? []).map((mp: any) => ({
+        measure: mp.measure ?? "",
+        price: mp.price !== undefined && mp.price !== null ? String(mp.price) : "",
+      })),
       colors: colorStrings.filter(Boolean),
       images: null,
       status: product.status,
@@ -171,7 +180,7 @@ const AdminProducts = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-serif font-bold text-foreground">Produits</h1>
-            <p className="text-muted-foreground">Gerez votre catalogue</p>
+            <p className="text-muted-foreground">Gérez votre catalogue</p>
           </div>
           <div className="flex gap-2">
             <Button
@@ -206,7 +215,7 @@ const AdminProducts = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="category">Categorie</Label>
+                      <Label htmlFor="category">Catégorie</Label>
                       <select
                         id="category"
                         value={form.category}
@@ -215,7 +224,7 @@ const AdminProducts = () => {
                         required
                       >
                         <option value="" disabled>
-                          Selectionner une categorie
+                          Sélectionner une catégorie
                         </option>
                         {((categoriesData?.data ?? []).length > 0
                           ? categoriesData?.data
@@ -266,7 +275,7 @@ const AdminProducts = () => {
                           checked={form.masquer}
                           onCheckedChange={(checked) => setForm((f) => ({ ...f, masquer: checked }))}
                         />
-                        <span className="text-sm text-muted-foreground">{form.masquer ? "Masque" : "Visible"}</span>
+                        <span className="text-sm text-muted-foreground">{form.masquer ? "Masqué" : "Visible"}</span>
                       </div>
                     </div>
                   </div>
@@ -283,56 +292,110 @@ const AdminProducts = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="sheet">Mesures de drap (separees par virgule)</Label>
-                      <Input
-                        id="sheet"
-                        value={form.sheetMeasures}
-                        onChange={(e) => setForm((f) => ({ ...f, sheetMeasures: e.target.value }))}
-                        placeholder="90x190x35 cm, 140x200x35 cm"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Palette de couleurs</Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline" className="justify-start">
-                            {form.colors.length === 0 ? "Choisir des couleurs" : `${form.colors.length} selectionnee(s)`}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[260px]">
-                          <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto">
-                            {colorPalette.map((hex) => (
-                              <button
-                                key={hex}
-                                type="button"
-                                onClick={() => toggleColor(hex)}
-                                className={cn(
-                                  "h-8 w-8 rounded-full border-2 transition-all",
-                                  form.colors.includes(hex)
-                                    ? "border-primary ring-2 ring-primary ring-offset-2"
-                                    : "border-border"
-                                )}
-                                style={{ backgroundColor: hex }}
-                                title={hex}
-                              />
-                            ))}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                      {form.colors.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {form.colors.map((c) => (
-                            <span
-                              key={c}
-                              className="px-2 py-1 text-xs rounded-full border"
-                              style={{ backgroundColor: c, color: "#000" }}
+                      <Label>Mesures avec prix</Label>
+                      <div className="space-y-2">
+                        {form.measurePrices.map((mp, idx) => (
+                          <div key={idx} className="grid grid-cols-5 gap-2 items-center">
+                            <Input
+                              className="col-span-3"
+                              placeholder="Mesure (ex: 90x190x35 cm)"
+                              value={mp.measure}
+                              onChange={(e) =>
+                                setForm((f) => ({
+                                  ...f,
+                                  measurePrices: f.measurePrices.map((item, i) =>
+                                    i === idx ? { ...item, measure: e.target.value } : item
+                                  ),
+                                }))
+                              }
+                            />
+                            <Input
+                              className="col-span-2"
+                              type="number"
+                              step="0.01"
+                              placeholder="Prix"
+                              value={mp.price}
+                              onChange={(e) =>
+                                setForm((f) => ({
+                                  ...f,
+                                  measurePrices: f.measurePrices.map((item, i) =>
+                                    i === idx ? { ...item, price: e.target.value } : item
+                                  ),
+                                }))
+                              }
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() =>
+                                setForm((f) => ({
+                                  ...f,
+                                  measurePrices: f.measurePrices.filter((_, i) => i !== idx),
+                                }))
+                              }
                             >
-                              {c}
-                            </span>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() =>
+                            setForm((f) => ({
+                              ...f,
+                              measurePrices: [...f.measurePrices, { measure: "", price: "" }],
+                            }))
+                          }
+                        >
+                          + Ajouter une mesure/prix
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Palette de couleurs</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="justify-start">
+                          {form.colors.length === 0 ? "Choisir des couleurs" : `${form.colors.length} sélectionnée(s)`}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[260px]">
+                        <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto">
+                          {colorPalette.map((hex) => (
+                            <button
+                              key={hex}
+                              type="button"
+                              onClick={() => toggleColor(hex)}
+                              className={cn(
+                                "h-8 w-8 rounded-full border-2 transition-all",
+                                form.colors.includes(hex)
+                                  ? "border-primary ring-2 ring-primary ring-offset-2"
+                                  : "border-border"
+                              )}
+                              style={{ backgroundColor: hex }}
+                              title={hex}
+                            />
                           ))}
                         </div>
-                      )}
-                    </div>
+                      </PopoverContent>
+                    </Popover>
+                    {form.colors.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {form.colors.map((c) => (
+                          <span
+                            key={c}
+                            className="px-2 py-1 text-xs rounded-full border"
+                            style={{ backgroundColor: c, color: "#000" }}
+                          >
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -377,11 +440,11 @@ const AdminProducts = () => {
                 <TableRow>
                   <TableHead className="w-16">Image</TableHead>
                   <TableHead>Titre</TableHead>
-                  <TableHead>Categorie</TableHead>
+                  <TableHead>Catégorie</TableHead>
                   <TableHead>Prix</TableHead>
                   <TableHead>Promo</TableHead>
-                  <TableHead>Disponibilite</TableHead>
-                  <TableHead>Visibilite</TableHead>
+                  <TableHead>Disponibilité</TableHead>
+                  <TableHead>Visibilité</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -430,7 +493,7 @@ const AdminProducts = () => {
                       </TableCell>
                       <TableCell>
                         <Badge className={product.masquer ? "bg-destructive" : "bg-green-600"}>
-                          {product.masquer ? "Masque" : "Visible"}
+                          {product.masquer ? "Masqué" : "Visible"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
@@ -453,7 +516,7 @@ const AdminProducts = () => {
                 {!isLoading && !isError && filteredProducts.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center text-muted-foreground">
-                      Aucun produit ne correspond a votre recherche.
+                      Aucun produit ne correspond à votre recherche.
                     </TableCell>
                   </TableRow>
                 )}

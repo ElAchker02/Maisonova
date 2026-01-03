@@ -83,12 +83,8 @@ class ProductController extends Controller
         try {
             $data = $request->validated();
 
-            if (!array_key_exists('stock', $data)) {
-                $data['stock'] = $product->stock;
-            }
-            if (!array_key_exists('masquer', $data)) {
-                $data['masquer'] = $product->masquer ?? false;
-            }
+            $data['stock'] = $data['stock'] ?? $product->stock;
+            $data['masquer'] = $data['masquer'] ?? ($product->masquer ?? false);
 
             if ($request->hasFile('images')) {
                 $data['images'] = $this->uploader->upload($request->file('images'));

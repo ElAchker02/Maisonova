@@ -26,7 +26,7 @@ class ProductResource extends JsonResource
             'final_price' => $this->final_price,
             'images' => $this->normalizeImages($this->images ?? []),
             'sizes' => $this->sizes ?? [],
-            'sheet_measures' => $this->sheet_measures ?? [],
+            'measure_prices' => $this->measure_prices ?? [],
             'colors' => $this->colors ?? [],
             'stock' => $this->stock,
             'status' => (bool) $this->status,
