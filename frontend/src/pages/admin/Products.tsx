@@ -171,6 +171,7 @@ const AdminProducts = () => {
   };
 
   const handleDelete = (id: number) => {
+    if (!window.confirm("Confirmer la suppression de ce produit ?")) return;
     deleteMutation.mutate(id);
   };
 

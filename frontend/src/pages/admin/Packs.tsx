@@ -170,7 +170,10 @@ const AdminPacks = () => {
     mutation.mutate();
   };
 
-  const handleDelete = (id: number) => deleteMutation.mutate(id);
+  const handleDelete = (id: number) => {
+    if (!window.confirm("Confirmer la suppression de ce pack ?")) return;
+    deleteMutation.mutate(id);
+  };
 
   const addPackProduct = () => {
     setPackProducts((prev) => [...prev, { product_id: null }]);

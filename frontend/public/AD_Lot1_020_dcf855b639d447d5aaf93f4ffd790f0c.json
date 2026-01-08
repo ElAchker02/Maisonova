@@ -1,0 +1,154 @@
+{
+  "structured_fields": {
+    "typeActe": "وفاة",
+    "jumeaux": "",
+    "pereDecede": "false",
+    "mereDecede": "true",
+    "adresseParent": "حي الغماريين الزنقة 38، الرقم 21 سيدي سليمان",
+    "adresseParentF": "",
+    "villeParent": "سيدي سليمان",
+    "officier": "ناصر أحمد",
+    "officier_qualite": "عضو المجلس البلدي وضابط الحالة المدنية بالتفويض",
+    "declarant": {
+      "nom": "بنجلون",
+      "prenom": "طاها",
+      "profession": "مستخدم",
+      "age": "38",
+      "relation": "أخوها",
+      "nationalite": "مغربية",
+      "adresse": "حي الغماريين الزنقة 38، الرقم 21 سيدي سليمان"
+    },
+    "dateEtablissementActe": {
+      "dateGreg": {
+        "jour": "23",
+        "mois": "02",
+        "annee": "2020"
+      },
+      "dateHegire": {
+        "jour": "17",
+        "mois": "11",
+        "annee": "1441"
+      },
+      "time": {
+        "heure": "",
+        "minute": ""
+      }
+    },
+    "decesList": {
+      "lieuDeces": "جماعة سيدي سليمان اقليم القنيطرة",
+      "lieuDecesF": "",
+      "villeDeces": "سيدي سليمان",
+      "lieuResidence": "",
+      "lieuResidenceF": "",
+      "villeAdresse": "سيدي سليمان",
+      "lieuResidencePere": "",
+      "lieuResidencePereF": "",
+      "villeAdressePere": "سيدي سليمان",
+      "lieuResidenceMere": "",
+      "lieuResidenceMereF": "",
+      "villeAdresseMere": "سيدي سليمان",
+      "statutFamilialle": "متزوجة",
+      "profession": "",
+      "date": {
+        "dateGreg": {
+          "jour": "20",
+          "mois": "02",
+          "annee": "2020"
+        },
+        "dateHegire": {
+          "jour": "14",
+          "mois": "11",
+          "annee": "1441"
+        },
+        "time": {
+          "heure": "08",
+          "minute": ""
+        }
+      }
+    },
+    "personne": {
+      "nom": "بنجلون",
+      "nomF": "",
+      "prenom": "لمياء",
+      "prenomF": "",
+      "nationalite": "المغربية",
+      "sexe": "أنثى",
+      "lieuResidence": "حي الغماريين الزنقة 38، الرقم 21 سيدي سليمان",
+      "lieuNaissance": "جماعة سيدي سليمان اقليم القنيطرة",
+      "lieuNaissanceF": "",
+      "villeNaissance": "سيدي سليمان",
+      "dateNaissance": {
+        "dateGreg": {
+          "jour": "06",
+          "mois": "06",
+          "annee": "1986"
+        },
+        "dateHegire": {
+          "jour": "03",
+          "mois": "01",
+          "annee": "1402"
+        }
+      },
+      "tempsNaissance": {
+        "heure": "",
+        "minute": ""
+      }
+    },
+    "pere": {
+      "nom": "بنجلون",
+      "nomF": "",
+      "prenom": "أحمد",
+      "prenomF": "",
+      "nationalite": "المغربية",
+      "profession": "متقاعد",
+      "lieuNaissance": "",
+      "lieuNaissanceF": "",
+      "villeNaissance": "",
+      "dateNaissance": {
+        "dateGreg": {
+          "jour": "",
+          "mois": "",
+          "annee": ""
+        },
+        "dateHegire": {
+          "jour": "",
+          "mois": "",
+          "annee": ""
+        }
+      },
+      "ascendant": {
+        "nom": "صالح",
+        "nomF": ""
+      }
+    },
+    "mere": {
+      "nom": "",
+      "nomF": "",
+      "prenom": "إيمان",
+      "prenomF": "",
+      "nationalite": "المغربية",
+      "profession": "متوفية",
+      "lieuNaissance": "",
+      "lieuNaissanceF": "",
+      "villeNaissance": "",
+      "dateNaissance": {
+        "dateGreg": {
+          "jour": "",
+          "mois": "",
+          "annee": ""
+        },
+        "dateHegire": {
+          "jour": "",
+          "mois": "",
+          "annee": ""
+        }
+      },
+      "ascendant": {
+        "nom": "أمير",
+        "nomF": ""
+      }
+    },
+    "marge": ""
+  },
+  "full_text": "في يوم رابع عشر ذو القعدة الف واربعمائة وعشرين هجرية\nموافق عشرين فبراير الفين\nعلى الساعة الثامنة والدقيقة\nتوف ب جماعة سيدي سليمان اقليم القنيطرة\nلمياء بنجلون Lamiae Benjeloun المغربي (ة) الجنسيـة\nالمولود ب جماعة سيدي سليمان اقليم القنيطرة عقد الولادة 1662/695\nفي ثالث محرم الف و ثلاثمائة واثنين وثمانين\nموافق سادس يونيو الف و تسعمائة و اثنين و ستين\nحرفتها لا شيء الساكن ب حي الغماريين الزنقة 38\nالرقم 21 سيدي سليمان\nوالده أحمد ابن صالح جنسيته مغربية\nحرفته متقاعد الساكن ب العنوان المذكور اعلاه\nووالدتها إيمان بنت أمير\nجنسيتها مغربية حرفتها المتوفية\nالساكنة ب العنوان المذكور اعلاه\nوقد كان المتوفى متزوجة\nبناء على ما صرح به طاها بنجلون (اخوها) تحت\nعددد3 عمره ثمانية وثلاثين سنة مهنته مستخدم\nجنسيته مغربية الساكن بالعنوان المذكور اعلاه\nحرر أو نقل في سابع عشر ذو القعدة الف واربعمائة\nوعشرين موافق ثالث وعشرين فبراير\nالفين على الساعة\nو الدقيقة\nمن طرفنا نحن ناصر أحمد عضو بالمجلس\nالبلدي\nوضابط الحالة المدنية بالتفويض"
+}

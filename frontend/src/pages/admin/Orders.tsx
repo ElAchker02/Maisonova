@@ -188,7 +188,11 @@ const AdminOrders = () => {
                           variant="ghost"
                           size="icon"
                           className="text-destructive hover:text-destructive"
-                          onClick={() => deleteMutation.mutate(order.id)}
+                          onClick={() => {
+                            if (window.confirm("Confirmer la suppression de cette commande ?")) {
+                              deleteMutation.mutate(order.id);
+                            }
+                          }}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

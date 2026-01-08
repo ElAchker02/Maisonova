@@ -138,6 +138,7 @@ const AdminUsers = () => {
       toast({ title: "Vous ne pouvez pas supprimer votre propre compte", variant: "destructive" });
       return;
     }
+    if (!window.confirm("Confirmer la suppression de cet utilisateur ?")) return;
     deleteMutation.mutate(user.id);
   };
 
