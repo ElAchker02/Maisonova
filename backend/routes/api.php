@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\PackController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,9 @@ Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 Route::put('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+// Dashboard stats
+Route::get('admin/stats', [DashboardController::class, 'overview']);
 
 Route::post('packs/{pack}/products', [PackController::class, 'addProductToPack'])->middleware('auth:sanctum');
 Route::delete('packs/{pack}/products/{product}', [PackController::class, 'removeProductFromPack'])->middleware('auth:sanctum');

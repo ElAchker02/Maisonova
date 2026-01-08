@@ -1,64 +1,50 @@
-import { useMemo } from "react";
+import type { ElementType } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ShoppingCart, DollarSign, Package, Clock, TrendingUp } from "lucide-react";
 import { api } from "@/lib/api";
-import { useAuthStore } from "@/store/authStore";
+import {
+  ShoppingCart,
+  DollarSign,
+  Package,
+  Clock,
+  CheckCircle2,
+  Truck,
+  Ban,
+  BarChart3,
+} from "lucide-react";
 
 const AdminDashboard = () => {
-  const token = useAuthStore((state) => state.token);
-
-  const { data: ordersData } = useQuery({
-    queryKey: ["admin-orders-overview"],
-    queryFn: () => api.getOrders(token as string, { per_page: 100 }),
-    enabled: Boolean(token),
+  const { data } = useQuery({
+    queryKey: ["admin-dashboard-stats"],
+    queryFn: () => api.getDashboardStats(),
   });
 
-  const { data: productsData } = useQuery({
-    queryKey: ["admin-products-overview"],
-    queryFn: () => api.getProducts({ per_page: 100 }),
-  });
-
-  const { data: topSalesData } = useQuery({
-    queryKey: ["admin-top-sales"],
-    queryFn: () => api.getTopSales(),
-  });
-
-  const totalOrders = ordersData?.data.length ?? 0;
-  const revenue = ordersData?.data.reduce((sum, order) => sum + order.total, 0) ?? 0;
-  const inStockProducts = productsData?.data.filter((product) => product.status).length ?? 0;
-  const pendingOrders =
-    ordersData?.data.filter((order) => order.status === "no_answer" || order.status === "confirmed")
-      .length ?? 0;
+  const stats = data?.data;
+  const topByQuantity = stats?.top_quantity ?? [];
+  const topByRevenue = stats?.top_revenue ?? [];
+  const statusBuckets = stats?.status ?? {
+    pending: 0,
+    no_answer: 0,
+    confirmed: 0,
+    delivering: 0,
+    delivered: 0,
+    cancelled: 0,
+  };
+  const catalog = stats?.catalog ?? {
+    products: { available: 0, unavailable: 0 },
+    packs: { available: 0, unavailable: 0 },
+  };
 
   const kpis = [
-    {
-      title: "Total des commandes",
-      value: totalOrders.toString(),
-      change: "+5%",
-      icon: ShoppingCart,
-    },
-    {
-      title: "Chiffre d'affaires du mois",
-  value: `${revenue.toFixed(2)} DH`,
-      change: "+8%",
-      icon: DollarSign,
-    },
-    {
-      title: "Produits en stock",
-      value: inStockProducts.toString(),
-      icon: Package,
-    },
-    {
-      title: "Commandes en attente",
-      value: pendingOrders.toString(),
-      icon: Clock,
-    },
+    { title: "Ventes du jour", value: `${(stats?.kpis?.revenue_day ?? 0).toFixed(2)} DH`, icon: DollarSign },
+    { title: "Ventes semaine", value: `${(stats?.kpis?.revenue_week ?? 0).toFixed(2)} DH`, icon: DollarSign },
+    { title: "Ventes mois", value: `${(stats?.kpis?.revenue_month ?? 0).toFixed(2)} DH`, icon: DollarSign },
+    { title: "Commandes du jour", value: String(stats?.kpis?.orders_day ?? 0), icon: ShoppingCart },
+    { title: "Commandes semaine", value: String(stats?.kpis?.orders_week ?? 0), icon: ShoppingCart },
+    { title: "Commandes mois", value: String(stats?.kpis?.orders_month ?? 0), icon: ShoppingCart },
   ];
-
-  const topSellers = useMemo(() => topSalesData?.data.slice(0, 5) ?? [], [topSalesData]);
 
   return (
     <AdminLayout>
@@ -68,70 +54,130 @@ const AdminDashboard = () => {
           <p className="text-muted-foreground">Vue d'ensemble de votre activité</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           {kpis.map((kpi) => (
             <Card key={kpi.title}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {kpi.title}
-                </CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">{kpi.title}</CardTitle>
                 <kpi.icon className="h-5 w-5 text-primary" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{kpi.value}</div>
-                {kpi.change && (
-                  <p className="text-xs text-green-600 flex items-center gap-1 mt-1">
-                    <TrendingUp className="h-3 w-3" />
-                    {kpi.change} vs mois dernier
-                  </p>
-                )}
               </CardContent>
             </Card>
           ))}
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="font-serif">Top 5 produits les plus vendus</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-16">Rang</TableHead>
-                  <TableHead>Produit</TableHead>
-                  <TableHead className="text-right">Ventes</TableHead>
-                  <TableHead className="text-right">Prix actuel</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {topSellers.map((product, index) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <span className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
-                        #{index + 1}
-                      </span>
-                    </TableCell>
-                    <TableCell className="font-medium">{product.title}</TableCell>
-                    <TableCell className="text-right">{product.sales_quantity ?? "—"}</TableCell>
-                    <TableCell className="text-right font-semibold text-primary">
-                      {product.final_price.toFixed(2)} DH
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {topSellers.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground">
-                      Pas encore de ventes ce mois-ci.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="font-serif">Répartition des statuts</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <StatusPill label="En attente" value={statusBuckets.pending} icon={Clock} />
+              <StatusPill label="Pas de réponse" value={statusBuckets.no_answer} icon={Clock} />
+              <StatusPill label="Confirmées" value={statusBuckets.confirmed} icon={CheckCircle2} />
+              <StatusPill label="En livraison" value={statusBuckets.delivering} icon={Truck} />
+              <StatusPill label="Livrées" value={statusBuckets.delivered} icon={Package} />
+              <StatusPill label="Annulées" value={statusBuckets.cancelled} icon={Ban} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-serif">Disponibilité catalogue</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Package className="h-4 w-4" /> Produits
+                </div>
+                <div className="text-sm font-semibold">
+                  {catalog.products.available} dispo / {catalog.products.unavailable} indispo
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <BarChart3 className="h-4 w-4" /> Packs
+                </div>
+                <div className="text-sm font-semibold">
+                  {catalog.packs.available} dispo / {catalog.packs.unavailable} indispo
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-serif">Top produits/packs (quantités)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TopTable items={topByQuantity} metric="quantity" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-serif">Top produits/packs (CA)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TopTable items={topByRevenue} metric="revenue" />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </AdminLayout>
+  );
+};
+
+const StatusPill = ({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: number;
+  icon: ElementType;
+}) => (
+  <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <Icon className="h-4 w-4 text-primary" />
+      {label}
+    </div>
+    <div className="text-lg font-semibold">{value}</div>
+  </div>
+);
+
+const TopTable = ({ items, metric }: { items: AggregatedItem[]; metric: "quantity" | "revenue" }) => {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Intitulé</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead className="text-right">{metric === "quantity" ? "Quantité" : "CA (DH)"}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {items.map((item) => (
+          <TableRow key={`${item.type}-${item.id}`}>
+            <TableCell className="font-medium">{item.title}</TableCell>
+            <TableCell className="text-muted-foreground text-sm">{item.type === "pack" ? "Pack" : "Produit"}</TableCell>
+            <TableCell className="text-right font-semibold">
+              {metric === "quantity" ? item.quantity : item.revenue.toFixed(2)}
+            </TableCell>
+          </TableRow>
+        ))}
+        {items.length === 0 && (
+          <TableRow>
+            <TableCell colSpan={3} className="text-center text-muted-foreground">
+              Pas encore de données.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 };
 

@@ -112,7 +112,8 @@ export const api = {
 
   getCategories: () => apiFetch<{ data: string[] }>("/categories"),
 
-  getPacks: () => apiFetch<PaginatedResponse<ApiPack>>("/packs"),
+  getPacks: (params?: Record<string, string | number | undefined>) =>
+    apiFetch<PaginatedResponse<ApiPack>>(`/packs${buildQueryString(params)}`),
 
   getPack: (id: string | number) =>
     apiFetch<ApiSingleResponse<ApiPack>>(`/packs/${id}`).then((res) => res.data),
@@ -163,6 +164,8 @@ export const api = {
       method: "DELETE",
       token,
     }),
+
+  getDashboardStats: () => apiFetch<{ data: any }>("/admin/stats"),
 
   createOrder: (data: {
     full_name: string;
